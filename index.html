@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Practice - Pascal</title>
+  <style>
+    /* =====================================================
+       ESTILOS GENERALES DE LA PÁGINA
+       ===================================================== */
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #fff4c7, #dff5ff);
+      color: #222;
+    }
+
+    header {
+      background: #ffcc66;
+      padding: 18px;
+      text-align: center;
+      border-bottom: 4px solid #f4a623;
+    }
+
+    h1 { margin: 0; font-size: 28px; }
+    header p { margin: 8px 0 0; font-size: 18px; }
+
+    main {
+      max-width: 1150px;
+      margin: 20px auto;
+      padding: 15px;
+    }
+
+    section {
+      background: white;
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+
+    h2 { margin-top: 0; color: #1f4e79; }
+    .hidden { display: none !important; }
+
+    .topbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 5px;
+      color: white;
+      font-weight: bold;
+      background: #4caf50;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .tab { background: #1f78d1; }
+    .tab.active { background: #174e85; }
+    .secondary { background: #1f78d1; }
+    .danger { background: #e74c3c; }
+    .sound { background: #9b59b6; }
+
+    .score {
+      background: #e9f9e9;
+      border: 2px solid #70c970;
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 18px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+    }
+
+    .card, .option, .dropzone, .sentence-option {
+      background: #fff8e6;
+      border: 2px solid #ffd27a;
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.2s;
+      user-select: none;
+    }
+
+    .card:hover, .option:hover, .sentence-option:hover {
+      transform: scale(1.04);
+      background: #fff1c6;
+    }
+
+    .option.done, .dropzone.done, .sentence-option.done {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .option.selected { border: 4px solid #1f78d1; background: #dff0ff; }
+
+    .emoji { font-size: 44px; display: block; margin-bottom: 8px; }
+    .big-emoji { font-size: 82px; margin: 10px; }
+    .english { font-weight: bold; font-size: 19px; }
+    .spanish { color: #555; font-size: 15px; }
+
+    .practice-layout {
+      display: grid;
+      grid-template-columns: 1fr 270px;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .game-box {
+      background: #eaf7ff;
+      border: 2px solid #8bd3ff;
+      border-radius: 18px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .stats-box {
+      background: #fff8e6;
+      border: 2px solid #ffd27a;
+      border-radius: 18px;
+      padding: 14px;
+      text-align: left;
+      font-size: 16px;
+    }
+
+    .stats-box h3 { margin-top: 0; text-align: center; color: #1f4e79; }
+    .stats-line { margin: 10px 0; font-weight: bold; }
+
+    input, select {
+      width: 100%;
+      max-width: 380px;
+      padding: 14px;
+      font-size: 22px;
+      border-radius: 14px;
+      border: 2px solid #aaa;
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    select { font-size: 17px; padding: 10px; }
+
+    .feedback {
+      min-height: 32px;
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .ok { color: #228b22; }
+    .bad { color: #c0392b; }
+
+    .final-message {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 18px;
+      background: #e9f9e9;
+      border: 3px solid #70c970;
+      font-size: 28px;
+      font-weight: bold;
+      color: #228b22;
+      text-align: center;
+    }
+
+    .motivation-box {
+      margin-top: 12px;
+      padding: 10px;
+      background: #f0f9ff;
+      border-radius: 14px;
+      border: 2px dashed #7ec8ff;
+      text-align: center;
+      font-size: 15px;
+    }
+
+    .sticker { font-size: 42px; display: block; margin-bottom: 6px; }
+
+    .happy-sticker {
+      font-size: 70px;
+      margin-top: 10px;
+      animation: bounce 0.6s ease;
+    }
+
+    @keyframes bounce {
+      0% { transform: scale(0.8); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .mastered-list {
+      margin-top: 10px;
+      font-size: 14px;
+      max-height: 130px;
+      overflow-y: auto;
+      border-top: 1px solid #ddd;
+      padding-top: 8px;
+    }
+
+    .mastered-item { color: #228b22; font-weight: bold; }
+
+    .match-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .dropzone {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      background: #f7fbff;
+    }
+
+    .person-card {
+      font-size: 86px;
+      margin: 8px 0;
+    }
+
+    .sentence-help {
+      color: #555;
+      font-size: 16px;
+      margin-top: 4px;
+    }
+
+    .sentence-question {
+      font-size: 26px;
+      font-weight: bold;
+      color: #1f4e79;
+      margin: 12px 0;
+    }
+
+    .sentence-answers {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .sentence-option {
+      background: #fff8e6;
+      border: 2px solid #ffd27a;
+      border-radius: 16px;
+      padding: 18px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .answer-label { font-weight: bold; margin-top: 6px; }
+
+    @media (max-width: 760px) {
+      .practice-layout, .match-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 24px; }
+    }
+
+    /* =====================================================
+       FIN ESTILOS GENERALES DE LA PÁGINA
+       ===================================================== */
+  </style>
+</head>
+<body>
+  <!-- =====================================================
+       INICIO MENÚ PRINCIPAL / BOTONES SUPERIORES
+       ===================================================== -->
+  <header>
+    <h1>English Practice: Food & Vegetables</h1>
+    <p>Practica palabras, escritura, imágenes, preguntas y respuestas</p>
+    <div class="topbar">
+      <button class="tab active" onclick="showSection('learn', this)">1. Ver palabras</button>
+      <button class="tab" onclick="showSection('write', this)">2. Escribir</button>
+      <button class="tab" onclick="showSection('choose', this)">3. Elegir palabra</button>
+      <button class="tab" onclick="showSection('match', this)">4. Unir imagen</button>
+      <button class="tab" onclick="showSection('sentence', this)">5. Preguntas</button>
+    </div>
+  </header>
+  <!-- =====================================================
+       FIN MENÚ PRINCIPAL / BOTONES SUPERIORES
+       ===================================================== -->
+
+  <!-- =====================================================
+       INICIO CONTENIDO PRINCIPAL
+       ===================================================== -->
+  <main>
+    <div class="score">⭐ Puntaje: <span id="score">0</span></div>
+
+    <!-- =====================================================
+         INICIO MÓDULO 1. VER PALABRAS
+         ===================================================== -->
+    <section id="learn">
+      <h2>1. Ver y escuchar palabras</h2>
+      <p><strong>Total de palabras a aprender:</strong> <span id="totalWordsLearn">14</span></p>
+      <div class="cards" id="wordCards"></div>
+    </section>
+    <!-- =====================================================
+         FIN MÓDULO 1. VER PALABRAS
+         ===================================================== -->
+
+    <!-- =====================================================
+         INICIO MÓDULO 2. ESCRIBIR
+         ===================================================== -->
+    <section id="write" class="hidden">
+      <h2>2. Escribe la palabra en inglés</h2>
+      <div class="practice-layout">
+        <div class="game-box">
+          <div class="big-emoji" id="writeEmoji"></div>
+          <p>Escribe en inglés: <strong id="writeSpanish"></strong></p>
+          <input id="writeInput" placeholder="Escribe aquí" autocomplete="off" />
+          <br />
+          <button onclick="checkWriting()">Revisar</button>
+          <button class="secondary" onclick="giveWriteHint()">Dame pista</button>
+          <button class="secondary" onclick="showWriteAnswer()">Mostrar respuesta</button>
+          <button class="secondary" onclick="nextWritingExercise()">Otra palabra</button>
+          <button class="sound" onclick="speak(currentWrite.en)">Escuchar</button>
+          <div class="feedback" id="writeFeedback"></div>
+          <div class="final-message hidden" id="writeFinalMessage">🎉 ¡Eres lo máximo, estoy orgulloso de ti! :)</div>
+        </div>
+        <div class="stats-box">
+          <h3>Progreso</h3>
+          <div class="stats-line">✅ Correctas: <span id="writeCorrect">0</span></div>
+          <div class="stats-line">❌ Incorrectas: <span id="writeWrong">0</span></div>
+          <div class="stats-line">👀 Mostradas: <span id="writeShown">0</span></div>
+          <div class="stats-line">📚 Total: <span id="writeTotal">0</span> / <span class="totalWordsText">14</span></div>
+          <button class="danger" onclick="repeatWritePending()">Repetir incorrectas o mostradas</button>
+          <div class="motivation-box"><span class="sticker" id="writeSticker">🐰</span><div id="writeMotivation">¡Vamos! Tú puedes 💪</div></div>
+          <div class="mastered-list"><strong>✔ Palabras logradas:</strong><div id="writeMastered"></div></div>
+        </div>
+      </div>
+    </section>
+    <!-- =====================================================
+         FIN MÓDULO 2. ESCRIBIR
+         ===================================================== -->
+
+    <!-- =====================================================
+         INICIO MÓDULO 3. ELEGIR PALABRA
+         ===================================================== -->
+    <section id="choose" class="hidden">
+      <h2>3. Elige la palabra correcta</h2>
+      <div class="practice-layout">
+        <div class="game-box">
+          <div class="big-emoji" id="chooseEmoji"></div>
+          <p>¿Cómo se escribe esta palabra?</p>
+          <div class="cards" id="chooseOptions"></div>
+          <div class="feedback" id="chooseFeedback"></div>
+          <div class="happy-sticker hidden" id="chooseHappySticker">🎉🐰</div>
+          <button class="secondary" onclick="giveChooseHint()">Dame pista</button>
+          <button class="secondary" onclick="showChooseAnswer()">Mostrar respuesta</button>
+          <button class="secondary" onclick="nextChooseExercise()">Nueva</button>
+          <div class="final-message hidden" id="chooseFinalMessage">🎉 ¡Eres lo máximo, estoy orgulloso de ti! :)</div>
+        </div>
+        <div class="stats-box">
+          <h3>Progreso</h3>
+          <div class="stats-line">✅ Correctas: <span id="chooseCorrect">0</span></div>
+          <div class="stats-line">❌ Incorrectas: <span id="chooseWrong">0</span></div>
+          <div class="stats-line">👀 Mostradas: <span id="chooseShown">0</span></div>
+          <div class="stats-line">📚 Total: <span id="chooseTotal">0</span> / <span class="totalWordsText">14</span></div>
+          <button class="danger" onclick="repeatChoosePending()">Repetir incorrectas o mostradas</button>
+          <div class="motivation-box"><span class="sticker" id="chooseSticker">🐶</span><div id="chooseMotivation">¡Tú puedes!</div></div>
+          <div class="mastered-list"><strong>✔ Palabras logradas:</strong><div id="chooseMastered"></div></div>
+        </div>
+      </div>
+    </section>
+    <!-- =====================================================
+         FIN MÓDULO 3. ELEGIR PALABRA
+         ===================================================== -->
+
+    <!-- =====================================================
+         INICIO MÓDULO 4. UNIR IMAGEN CON PALABRA
+         ===================================================== -->
+    <section id="match" class="hidden">
+      <h2>4. Une imagen con palabra</h2>
+      <p>Haz clic en una imagen y luego en su palabra correcta.</p>
+      <div class="match-grid">
+        <div class="cards" id="matchImages"></div>
+        <div class="cards" id="matchWords"></div>
+      </div>
+      <div class="feedback" id="matchFeedback"></div>
+      <button class="secondary" onclick="newMatchExercise()">Reiniciar ejercicio</button>
+    </section>
+    <!-- =====================================================
+         FIN MÓDULO 4. UNIR IMAGEN CON PALABRA
+         ===================================================== -->
+
+    <!-- =====================================================
+         INICIO MÓDULO 5. PREGUNTAS
+         ===================================================== -->
+    <section id="sentence" class="hidden">
+      <h2>5. Preguntas y respuestas</h2>
+      <div class="practice-layout">
+        <div class="game-box">
+          <p>Mira la cara y responde correctamente.</p>
+
+          <div class="person-card" id="sentencePerson"></div>
+          <div class="big-emoji" id="sentenceFood"></div>
+          <div class="sentence-help" id="sentenceHelp"></div>
+
+          <div class="sentence-question" id="sentenceQuestion"></div>
+          <div class="sentence-answers" id="sentenceOptions"></div>
+
+          <div class="feedback" id="sentenceFeedback"></div>
+          <div class="happy-sticker hidden" id="sentenceHappySticker">🎉🐰</div>
+
+          <button class="secondary" onclick="giveSentenceHint()">Dame pista</button>
+          <button class="secondary" onclick="showSentenceAnswer()">Mostrar respuesta</button>
+          <button class="secondary" onclick="nextSentenceExercise()">Otra pregunta</button>
+
+          <div class="final-message hidden" id="sentenceFinalMessage">🎉 ¡Eres lo máximo, estoy orgulloso de ti! :)</div>
+        </div>
+
+        <div class="stats-box">
+          <h3>Progreso</h3>
+          <div class="stats-line">✅ Correctas: <span id="sentenceCorrect">0</span></div>
+          <div class="stats-line">❌ Incorrectas: <span id="sentenceWrong">0</span></div>
+          <div class="stats-line">👀 Mostradas: <span id="sentenceShown">0</span></div>
+          <div class="stats-line">📚 Total: <span id="sentenceTotal">0</span> / <span id="sentenceLimitText">10</span></div>
+
+          <p><strong>Cantidad de preguntas:</strong></p>
+          <select id="sentenceLimit" onchange="resetSentenceSession()">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="14">14</option>
+            <option value="20">20</option>
+          </select>
+
+          <button class="danger" onclick="repeatSentencePending()">Repetir incorrectas o mostradas</button>
+          <div class="motivation-box"><span class="sticker" id="sentenceSticker">🧸</span><div id="sentenceMotivation">¡Sigue así!</div></div>
+        </div>
+      </div>
+    </section>
+    <!-- =====================================================
+         FIN MÓDULO 5. PREGUNTAS
+         ===================================================== -->
+
+  </main>
+  <!-- =====================================================
+       FIN CONTENIDO PRINCIPAL
+       ===================================================== -->
+
+  <!-- =====================================================
+       INICIO JAVASCRIPT / LÓGICA DE LA APP
+       ===================================================== -->
+  <script>
+    /* =====================================================
+       DATA PRINCIPAL: PALABRAS DISPONIBLES
+       ===================================================== */
+    const words = [
+      { en: 'rice', es: 'arroz', icon: '🍚' },
+      { en: 'meatballs', es: 'albóndigas', icon: '🧆' },
+      { en: 'chicken', es: 'pollo', icon: '🍗' },
+      { en: 'cereal', es: 'cereal', icon: '🥣' },
+      { en: 'chips', es: 'papas fritas', icon: '🍟' },
+      { en: 'biscuits', es: 'galletas', icon: '🍪' },
+      { en: 'sandwiches', es: 'sándwiches', icon: '🥪' },
+      { en: 'yoghurt', es: 'yogur', icon: '🥛' },
+      { en: 'beans', es: 'frijoles', icon: '🫘' },
+      { en: 'peas', es: 'guisantes', icon: '🟢' },
+      { en: 'cucumbers', es: 'pepinos', icon: '🥒' },
+      { en: 'peppers', es: 'pimientos', icon: '🫑' },
+      { en: 'carrots', es: 'zanahorias', icon: '🥕' },
+      { en: 'potatoes', es: 'papas', icon: '🥔' }
+    ];
+
+    /* =====================================================
+       VARIABLES GLOBALES / ESTADO DE LA APLICACIÓN
+       ===================================================== */
+    const TOTAL_WORDS = words.length;
+    let score = 0;
+
+    let writeIndex = 0;
+    let currentWrite = words[0];
+    let writeAnswered = false;
+    let writeCorrect = 0;
+    let writeWrong = 0;
+    let writeShown = 0;
+    let writeTotal = 0;
+    let writeRepeatQueue = [];
+    let writeMastered = [];
+    let writeFinished = false;
+
+    let chooseIndex = 0;
+    let currentChoose = words[0];
+    let chooseAnswered = false;
+    let chooseCorrect = 0;
+    let chooseWrong = 0;
+    let chooseShown = 0;
+    let chooseTotal = 0;
+    let chooseRepeatQueue = [];
+    let chooseMastered = [];
+    let chooseFinished = false;
+
+    let selectedImage = null;
+
+    let currentSentence = null;
+    let sentenceAnswered = false;
+    let sentenceCorrect = 0;
+    let sentenceWrong = 0;
+    let sentenceShown = 0;
+    let sentenceTotal = 0;
+    let sentenceLimit = 10;
+    let sentenceRepeatQueue = [];
+    let sentenceFinished = false;
+
+    /* =====================================================
+       FUNCIONES UTILITARIAS GENERALES
+       ===================================================== */
+    function normalize(text) {
+      return text.trim().toLowerCase();
+    }
+
+    function shuffle(array) {
+      return [...array].sort(() => Math.random() - 0.5);
+    }
+
+    function addScore(points) {
+      score += points;
+      document.getElementById('score').innerText = score;
+    }
+
+    function speak(text) {
+      if (!text) return;
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'en-US';
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(msg);
+    }
+
+    function makeHint(word) {
+      if (word.length <= 2) return word;
+      return word[0] + ' ' + '_ '.repeat(word.length - 2) + word[word.length - 1];
+    }
+
+    function addQueue(queue, wordObj) {
+      if (!queue.some(item => item.en === wordObj.en)) {
+        queue.push(wordObj);
+      }
+    }
+
+    function addUnique(list, word) {
+      if (!list.includes(word)) list.push(word);
+    }
+
+    function getNextUnmasteredIndex(currentIndex, masteredList) {
+      for (let i = 1; i <= TOTAL_WORDS; i++) {
+        const nextIndex = (currentIndex + i) % TOTAL_WORDS;
+        if (!masteredList.includes(words[nextIndex].en)) {
+          return nextIndex;
+        }
+      }
+      return -1;
+    }
+
+    function updateMasteredList(containerId, list) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      list.forEach(word => {
+        const div = document.createElement('div');
+        div.className = 'mastered-item';
+        div.innerText = '✔ ' + word;
+        container.appendChild(div);
+      });
+    }
+
+    function updateMotivation(prefix) {
+      const messages = [
+        { text: '¡Muy bien! Sigue así 🚀', sticker: '🐰' },
+        { text: '¡Increíble! Estás aprendiendo 🌟', sticker: '🐶' },
+        { text: '¡Sigue intentando! 💪', sticker: '🧸' },
+        { text: '¡Excelente trabajo! 🔥', sticker: '👾' }
+      ];
+      const random = messages[Math.floor(Math.random() * messages.length)];
+      document.getElementById(prefix + 'Motivation').innerText = random.text;
+      document.getElementById(prefix + 'Sticker').innerText = random.sticker;
+    }
+
+    /* =====================================================
+       NAVEGACIÓN ENTRE MENÚS
+       ===================================================== */
+    function showSection(id, button) {
+      document.querySelectorAll('main section').forEach(section => section.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      button.classList.add('active');
+    }
+
+    /* =====================================================
+       INICIO LÓGICA MÓDULO 1: VER PALABRAS
+       ===================================================== */
+    function renderLearnCards() {
+      document.getElementById('totalWordsLearn').innerText = TOTAL_WORDS;
+      document.querySelectorAll('.totalWordsText').forEach(el => el.innerText = TOTAL_WORDS);
+
+      const container = document.getElementById('wordCards');
+      container.innerHTML = '';
+
+      words.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = '<span class="emoji">' + item.icon + '</span><div class="english">' + item.en + '</div><div class="spanish">' + item.es + '</div>';
+        card.onclick = function() { speak(item.en); };
+        container.appendChild(card);
+      });
+    }
+    /* =====================================================
+       FIN LÓGICA MÓDULO 1: VER PALABRAS
+       ===================================================== */
+
+    /* =====================================================
+       INICIO LÓGICA MÓDULO 2: ESCRIBIR
+       ===================================================== */
+    function disableWriteExercise() {
+      writeFinished = true;
+      document.getElementById('writeFinalMessage').classList.remove('hidden');
+      document.getElementById('writeFeedback').innerText = '';
+      document.getElementById('writeInput').disabled = true;
+      document.querySelectorAll('#write .game-box button').forEach(btn => btn.disabled = true);
+    }
+
+    function loadWriteWord(wordObj) {
+      if (writeFinished) return;
+      if (writeMastered.length >= TOTAL_WORDS) {
+        disableWriteExercise();
+        return;
+      }
+
+      currentWrite = wordObj;
+      writeAnswered = false;
+      document.getElementById('writeEmoji').innerText = currentWrite.icon;
+      document.getElementById('writeSpanish').innerText = currentWrite.es;
+      document.getElementById('writeInput').value = '';
+      document.getElementById('writeFeedback').innerText = '';
+      document.getElementById('writeInput').focus();
+    }
+
+    function updateWriteStats() {
+      document.getElementById('writeCorrect').innerText = writeCorrect;
+      document.getElementById('writeWrong').innerText = writeWrong;
+      document.getElementById('writeShown').innerText = writeShown;
+      document.getElementById('writeTotal').innerText = writeTotal;
+      updateMasteredList('writeMastered', writeMastered);
+      if (writeMastered.length >= TOTAL_WORDS) disableWriteExercise();
+    }
+
+    function checkWriting() {
+      if (writeAnswered || writeFinished) return;
+
+      const answer = normalize(document.getElementById('writeInput').value);
+      const feedback = document.getElementById('writeFeedback');
+
+      writeAnswered = true;
+      writeTotal++;
+
+      if (answer === currentWrite.en) {
+        writeCorrect++;
+        addScore(1);
+        addUnique(writeMastered, currentWrite.en);
+        feedback.innerText = '✅ Correcto';
+        feedback.className = 'feedback ok';
+        speak(currentWrite.en);
+        updateMotivation('write');
+        updateWriteStats();
+        setTimeout(nextWritingExercise, 1200);
+      } else {
+        writeWrong++;
+        addQueue(writeRepeatQueue, currentWrite);
+        feedback.innerText = '❌ Era: ' + currentWrite.en;
+        feedback.className = 'feedback bad';
+        updateWriteStats();
+      }
+    }
+
+    function giveWriteHint() {
+      if (writeFinished) return;
+      document.getElementById('writeFeedback').innerText = '💡 Pista: ' + makeHint(currentWrite.en);
+      document.getElementById('writeFeedback').className = 'feedback';
+    }
+
+    function showWriteAnswer() {
+      if (writeAnswered || writeFinished) return;
+      writeAnswered = true;
+      writeShown++;
+      writeTotal++;
+      addQueue(writeRepeatQueue, currentWrite);
+      document.getElementById('writeFeedback').innerText = '👀 Era: ' + currentWrite.en;
+      document.getElementById('writeFeedback').className = 'feedback bad';
+      speak(currentWrite.en);
+      updateWriteStats();
+      setTimeout(nextWritingExercise, 1200);
+    }
+
+    function nextWritingExercise() {
+      if (writeFinished) return;
+      const nextIndex = getNextUnmasteredIndex(writeIndex, writeMastered);
+      if (nextIndex === -1) {
+        disableWriteExercise();
+        return;
+      }
+      writeIndex = nextIndex;
+      loadWriteWord(words[writeIndex]);
+    }
+
+    function repeatWritePending() {
+      if (writeFinished) return;
+      if (writeRepeatQueue.length === 0) {
+        document.getElementById('writeFeedback').innerText = '✅ No hay pendientes.';
+        return;
+      }
+      loadWriteWord(writeRepeatQueue.shift());
+      document.getElementById('writeFeedback').innerText = '🔁 Repitiendo pendiente';
+    }
+    /* =====================================================
+       FIN LÓGICA MÓDULO 2: ESCRIBIR
+       ===================================================== */
+
+    /* =====================================================
+       INICIO LÓGICA MÓDULO 3: ELEGIR PALABRA
+       ===================================================== */
+    function disableChooseExercise() {
+      chooseFinished = true;
+      document.getElementById('chooseFinalMessage').classList.remove('hidden');
+      document.getElementById('chooseFeedback').innerText = '';
+      document.getElementById('chooseOptions').innerHTML = '';
+      document.querySelectorAll('#choose .game-box button').forEach(btn => btn.disabled = true);
+    }
+
+    function loadChooseWord(wordObj) {
+      if (chooseFinished) return;
+      if (chooseMastered.length >= TOTAL_WORDS) {
+        disableChooseExercise();
+        return;
+      }
+
+      currentChoose = wordObj;
+      chooseAnswered = false;
+      document.getElementById('chooseEmoji').innerText = currentChoose.icon;
+      document.getElementById('chooseFeedback').innerText = '';
+      document.getElementById('chooseHappySticker').classList.add('hidden');
+
+      const wrong = shuffle(words.filter(w => w.en !== currentChoose.en)).slice(0, 3);
+      const options = shuffle([currentChoose, ...wrong]);
+      const container = document.getElementById('chooseOptions');
+      container.innerHTML = '';
+
+      options.forEach(item => {
+        const btn = document.createElement('div');
+        btn.className = 'option';
+        btn.innerText = item.en;
+        btn.onclick = function() { checkChoose(item); };
+        container.appendChild(btn);
+      });
+    }
+
+    function updateChooseStats() {
+      document.getElementById('chooseCorrect').innerText = chooseCorrect;
+      document.getElementById('chooseWrong').innerText = chooseWrong;
+      document.getElementById('chooseShown').innerText = chooseShown;
+      document.getElementById('chooseTotal').innerText = chooseTotal;
+      updateMasteredList('chooseMastered', chooseMastered);
+      if (chooseMastered.length >= TOTAL_WORDS) disableChooseExercise();
+    }
+
+    function checkChoose(item) {
+      if (chooseAnswered || chooseFinished) return;
+
+      const feedback = document.getElementById('chooseFeedback');
+      chooseAnswered = true;
+      chooseTotal++;
+
+      if (item.en === currentChoose.en) {
+        chooseCorrect++;
+        addScore(1);
+        addUnique(chooseMastered, item.en);
+        feedback.innerText = '✅ Muy bien';
+        feedback.className = 'feedback ok';
+        speak(item.en);
+        updateMotivation('choose');
+        document.getElementById('chooseHappySticker').classList.remove('hidden');
+        updateChooseStats();
+
+        if (!chooseFinished) {
+          setTimeout(nextChooseExercise, 1200);
+        }
+      } else {
+        chooseWrong++;
+        addQueue(chooseRepeatQueue, currentChoose);
+        feedback.innerText = '❌ Era: ' + currentChoose.en;
+        feedback.className = 'feedback bad';
+        updateChooseStats();
+      }
+    }
+
+    function giveChooseHint() {
+      if (chooseFinished) return;
+      document.getElementById('chooseFeedback').innerText = '💡 Pista: ' + makeHint(currentChoose.en);
+      document.getElementById('chooseFeedback').className = 'feedback';
+    }
+
+    function showChooseAnswer() {
+      if (chooseAnswered || chooseFinished) return;
+      chooseAnswered = true;
+      chooseShown++;
+      chooseTotal++;
+      addQueue(chooseRepeatQueue, currentChoose);
+      document.getElementById('chooseFeedback').innerText = '👀 Era: ' + currentChoose.en;
+      document.getElementById('chooseFeedback').className = 'feedback bad';
+      speak(currentChoose.en);
+      updateChooseStats();
+      setTimeout(nextChooseExercise, 1200);
+    }
+
+    function nextChooseExercise() {
+      if (chooseFinished) return;
+      const nextIndex = getNextUnmasteredIndex(chooseIndex, chooseMastered);
+      if (nextIndex === -1) {
+        disableChooseExercise();
+        return;
+      }
+      chooseIndex = nextIndex;
+      loadChooseWord(words[chooseIndex]);
+    }
+
+    function repeatChoosePending() {
+      if (chooseFinished) return;
+      if (chooseRepeatQueue.length === 0) {
+        document.getElementById('chooseFeedback').innerText = '✅ No hay pendientes.';
+        return;
+      }
+      loadChooseWord(chooseRepeatQueue.shift());
+      document.getElementById('chooseFeedback').innerText = '🔁 Repitiendo pendiente';
+    }
+    /* =====================================================
+       FIN LÓGICA MÓDULO 3: ELEGIR PALABRA
+       ===================================================== */
+
+    /* =====================================================
+       INICIO LÓGICA MÓDULO 4: UNIR IMAGEN CON PALABRA
+       ===================================================== */
+    function newMatchExercise() {
+      selectedImage = null;
+      document.getElementById('matchFeedback').innerText = '';
+      const sample = shuffle(words).slice(0, 6);
+      const images = document.getElementById('matchImages');
+      const wordList = document.getElementById('matchWords');
+      images.innerHTML = '';
+      wordList.innerHTML = '';
+
+      sample.forEach(item => {
+        const img = document.createElement('div');
+        img.className = 'option';
+        img.dataset.word = item.en;
+        img.innerHTML = '<span class="emoji">' + item.icon + '</span>';
+        img.onclick = function() {
+          document.querySelectorAll('#matchImages .option').forEach(x => x.classList.remove('selected'));
+          img.classList.add('selected');
+          selectedImage = img;
+        };
+        images.appendChild(img);
+      });
+
+      shuffle(sample).forEach(item => {
+        const word = document.createElement('div');
+        word.className = 'dropzone';
+        word.dataset.word = item.en;
+        word.innerText = item.en;
+        word.onclick = function() { checkMatch(word); };
+        wordList.appendChild(word);
+      });
+    }
+
+    function checkMatch(wordElement) {
+      const feedback = document.getElementById('matchFeedback');
+      if (!selectedImage) {
+        feedback.innerText = 'Primero elige una imagen.';
+        feedback.className = 'feedback bad';
+        return;
+      }
+
+      if (selectedImage.dataset.word === wordElement.dataset.word) {
+        feedback.innerText = '✅ Correcto';
+        feedback.className = 'feedback ok';
+        selectedImage.classList.add('done');
+        wordElement.classList.add('done');
+        selectedImage.classList.remove('selected');
+        speak(wordElement.dataset.word);
+        selectedImage = null;
+        addScore(1);
+      } else {
+        feedback.innerText = '❌ Esa no corresponde. Intenta de nuevo.';
+        feedback.className = 'feedback bad';
+      }
+    }
+    /* =====================================================
+       FIN LÓGICA MÓDULO 4: UNIR IMAGEN CON PALABRA
+       ===================================================== */
+
+    /* =====================================================
+       INICIO LÓGICA MÓDULO 5: PREGUNTAS
+       ===================================================== */
+    function makeSentenceQuestion() {
+      const item = words[Math.floor(Math.random() * words.length)];
+
+      const people = [
+        { subject: 'he', faceHappy: '👦😄', faceSad: '👦😢' },
+        { subject: 'she', faceHappy: '👧😊', faceSad: '👧😞' }
+      ];
+
+      const person = people[Math.floor(Math.random() * people.length)];
+      const likes = Math.random() > 0.5;
+
+      return {
+        id: Date.now() + '-' + Math.random(),
+        word: item,
+        subject: person.subject,
+        face: likes ? person.faceHappy : person.faceSad,
+        likes: likes,
+        question: `Does ${person.subject} like ${item.en}?`,
+        correctAnswer: likes
+          ? `${person.subject} likes ${item.en}`
+          : `${person.subject} doesn't like ${item.en}`
+      };
+    }
+
+    function loadSentenceQuestion(questionObj) {
+      if (sentenceFinished) return;
+      if (sentenceTotal >= sentenceLimit) {
+        disableSentenceExercise();
+        return;
+      }
+
+      currentSentence = questionObj || makeSentenceQuestion();
+      sentenceAnswered = false;
+
+      document.getElementById('sentencePerson').innerText = currentSentence.face;
+      document.getElementById('sentenceFood').innerText = currentSentence.word.icon;
+      document.getElementById('sentenceHelp').innerText = currentSentence.likes
+        ? 'Cara feliz = likes'
+        : "Cara triste = doesn't like";
+
+      document.getElementById('sentenceQuestion').innerText = currentSentence.question;
+      document.getElementById('sentenceFeedback').innerText = '';
+      document.getElementById('sentenceHappySticker').classList.add('hidden');
+
+      const food = currentSentence.word.en;
+      const options = [
+        currentSentence.correctAnswer,
+        `he likes ${food}`,
+        `she likes ${food}`,
+        `he doesn't like ${food}`,
+        `she doesn't like ${food}`
+      ];
+
+      const cleanOptions = shuffle([...new Set(options)]).slice(0, 4);
+
+      const container = document.getElementById('sentenceOptions');
+      container.innerHTML = '';
+
+      cleanOptions.forEach(answer => {
+        const opt = document.createElement('div');
+        opt.className = 'sentence-option';
+        opt.innerText = answer;
+        opt.onclick = function() { checkSentenceAnswer(answer); };
+        container.appendChild(opt);
+      });
+    }
+
+    function updateSentenceStats() {
+      document.getElementById('sentenceCorrect').innerText = sentenceCorrect;
+      document.getElementById('sentenceWrong').innerText = sentenceWrong;
+      document.getElementById('sentenceShown').innerText = sentenceShown;
+      document.getElementById('sentenceTotal').innerText = sentenceTotal;
+      document.getElementById('sentenceLimitText').innerText = sentenceLimit;
+    }
+
+    function checkSentenceAnswer(answer) {
+      if (sentenceAnswered || sentenceFinished) return;
+
+      sentenceAnswered = true;
+      sentenceTotal++;
+
+      const feedback = document.getElementById('sentenceFeedback');
+
+      if (normalize(answer) === normalize(currentSentence.correctAnswer)) {
+        sentenceCorrect++;
+        addScore(1);
+        feedback.innerText = '✅ Correcto: ' + currentSentence.correctAnswer;
+        feedback.className = 'feedback ok';
+        speak(currentSentence.correctAnswer);
+        updateMotivation('sentence');
+        document.getElementById('sentenceHappySticker').classList.remove('hidden');
+        updateSentenceStats();
+
+        if (!sentenceFinished) {
+          setTimeout(nextSentenceExercise, 1400);
+        }
+      } else {
+        sentenceWrong++;
+        addQueue(sentenceRepeatQueue, currentSentence);
+        feedback.innerText = '❌ Correcto: ' + currentSentence.correctAnswer;
+        feedback.className = 'feedback bad';
+        updateSentenceStats();
+      }
+    }
+
+    function giveSentenceHint() {
+      if (sentenceFinished || !currentSentence) return;
+
+      document.getElementById('sentenceFeedback').innerText = currentSentence.likes
+        ? '💡 Cara feliz: he/she likes + comida'
+        : "💡 Cara triste: he/she doesn't like + comida";
+
+      document.getElementById('sentenceFeedback').className = 'feedback';
+    }
+
+    function showSentenceAnswer() {
+      if (sentenceAnswered || sentenceFinished) return;
+
+      sentenceAnswered = true;
+      sentenceShown++;
+      sentenceTotal++;
+      addQueue(sentenceRepeatQueue, currentSentence);
+
+      document.getElementById('sentenceFeedback').innerText = '👀 Respuesta: ' + currentSentence.correctAnswer;
+      document.getElementById('sentenceFeedback').className = 'feedback bad';
+      speak(currentSentence.correctAnswer);
+      updateSentenceStats();
+
+      setTimeout(nextSentenceExercise, 1400);
+    }
+
+    function nextSentenceExercise() {
+      if (sentenceFinished) return;
+      if (sentenceTotal >= sentenceLimit) {
+        disableSentenceExercise();
+        return;
+      }
+      loadSentenceQuestion();
+    }
+
+    function resetSentenceSession() {
+      sentenceLimit = parseInt(document.getElementById('sentenceLimit').value, 10);
+      sentenceCorrect = 0;
+      sentenceWrong = 0;
+      sentenceShown = 0;
+      sentenceTotal = 0;
+      sentenceRepeatQueue = [];
+      sentenceFinished = false;
+
+      document.getElementById('sentenceFinalMessage').classList.add('hidden');
+      document.querySelectorAll('#sentence .game-box button').forEach(btn => btn.disabled = false);
+
+      updateSentenceStats();
+      loadSentenceQuestion();
+    }
+
+    function repeatSentencePending() {
+      if (sentenceFinished) return;
+
+      if (sentenceRepeatQueue.length === 0) {
+        document.getElementById('sentenceFeedback').innerText = '✅ No hay pendientes.';
+        return;
+      }
+
+      loadSentenceQuestion(sentenceRepeatQueue.shift());
+      document.getElementById('sentenceFeedback').innerText = '🔁 Repitiendo pendiente';
+    }
+
+    function disableSentenceExercise() {
+      sentenceFinished = true;
+      document.getElementById('sentenceFinalMessage').classList.remove('hidden');
+      document.getElementById('sentenceFeedback').innerText = '';
+      document.getElementById('sentenceOptions').innerHTML = '';
+      document.querySelectorAll('#sentence .game-box button').forEach(btn => btn.disabled = true);
+    }
+
+    /* =====================================================
+       FIN LÓGICA MÓDULO 5: PREGUNTAS 
+       ===================================================== */
+
+    /* =====================================================
+       INICIO INICIALIZACIÓN DE LA APP
+       ===================================================== */
+    document.addEventListener('DOMContentLoaded', function() {
+      renderLearnCards();
+      loadWriteWord(words[0]);
+      updateWriteStats();
+      loadChooseWord(words[0]);
+      updateChooseStats();
+      newMatchExercise();
+      loadSentenceQuestion();
+      updateSentenceStats();
+
+      document.getElementById('writeInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') checkWriting();
+      });
+    });
+    /* =====================================================
+       FIN INICIALIZACIÓN DE LA APP
+       ===================================================== */
+  </script>
+  <!-- =====================================================
+       FIN JAVASCRIPT / LÓGICA DE LA APP
+       ===================================================== -->
+</body>
+</html>
