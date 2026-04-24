@@ -235,6 +235,7 @@ button {
        INICIO CONTENIDO PRINCIPAL
        ===================================================== -->
   <main>
+    <button class="sound" onclick="activarSonido()">Activar sonido 🔊</button>
     <div class="score">⭐ Puntaje: <span id="score">0</span></div>
 
     <!-- =====================================================
@@ -469,12 +470,39 @@ button {
       document.getElementById('score').innerText = score;
     }
 
+    /* ================= SONIDO PARA MÓVIL ================= */
+
+let sonidoActivado = false;
+
+function activarSonido() {
+  sonidoActivado = true;
+
+  const msg = new SpeechSynthesisUtterance('sound ready');
+  msg.lang = 'en-US';
+  msg.volume = 1;
+
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(msg);
+}
+
     function speak(text) {
-      if (!text) return;
-      const msg = new SpeechSynthesisUtterance(text);
-      msg.lang = 'en-US';
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(msg);
+    if (!text) return;
+
+    // En móvil: si no activaste con botón, no suena
+    if (!sonidoActivado) return;
+
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = 'en-US';
+    msg.volume = 1;
+    msg.rate = 0.9;
+    msg.pitch = 1;
+
+    window.speechSynthesis.cancel();
+
+    // hack necesario para móviles
+    setTimeout(() => {
+        window.speechSynthesis.speak(msg);
+    }, 100);
     }
 
     function makeHint(word) {
