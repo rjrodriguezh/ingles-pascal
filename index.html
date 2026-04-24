@@ -4,213 +4,404 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>English Practice - Pascal</title>
-<style>
-* { box-sizing: border-box; }
+  <style>
+    /* =====================================================
+       ESTILOS GENERALES DE LA PÁGINA
+       ===================================================== */
+    * { box-sizing: border-box; }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #fff4c7, #dff5ff);
-  color: #222;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #fff4c7, #dff5ff);
+      color: #222;
+    }
 
-/* ================= DESKTOP ================= */
+    header {
+      background: #ffcc66;
+      padding: 18px;
+      text-align: center;
+      border-bottom: 4px solid #f4a623;
+    }
 
-header {
-  background: #ffcc66;
-  padding: 18px;
-  text-align: center;
-  border-bottom: 4px solid #f4a623;
-}
+    h1 { margin: 0; font-size: 28px; }
+    header p { margin: 8px 0 0; font-size: 18px; }
 
-h1 { margin: 0; font-size: 28px; }
-header p { margin: 8px 0 0; font-size: 18px; }
+    main {
+      max-width: 1150px;
+      margin: 20px auto;
+      padding: 15px;
+    }
 
-main {
-  max-width: 1150px;
-  margin: 20px auto;
-  padding: 15px;
-}
+    section {
+      background: white;
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
 
-section {
-  background: white;
-  border-radius: 20px;
-  padding: 18px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-}
+    h2 { margin-top: 0; color: #1f4e79; }
+    .hidden { display: none !important; }
 
-h2 { margin-top: 0; color: #1f4e79; }
-.hidden { display: none !important; }
+    .topbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 14px;
+    }
 
-.topbar {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 14px;
-}
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 5px;
+      color: white;
+      font-weight: bold;
+      background: #4caf50;
+    }
 
-button {
-  border: none;
-  border-radius: 14px;
-  padding: 12px 16px;
-  font-size: 16px;
-  cursor: pointer;
-  margin: 5px;
-  color: white;
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .tab { background: #1f78d1; }
+    .tab.active { background: #174e85; }
+    .secondary { background: #1f78d1; }
+    .danger { background: #e74c3c; }
+    .sound { background: #9b59b6; }
+
+    .score {
+      background: #e9f9e9;
+      border: 2px solid #70c970;
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 18px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+    }
+
+    .card, .option, .dropzone, .sentence-option {
+      background: #fff8e6;
+      border: 2px solid #ffd27a;
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.2s;
+      user-select: none;
+    }
+
+    .card:hover, .option:hover, .sentence-option:hover {
+      transform: scale(1.04);
+      background: #fff1c6;
+    }
+
+    .option.done, .dropzone.done, .sentence-option.done {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .option.selected { border: 4px solid #1f78d1; background: #dff0ff; }
+
+    .emoji { font-size: 44px; display: block; margin-bottom: 8px; }
+    .big-emoji { font-size: 82px; margin: 10px; }
+    .english { font-weight: bold; font-size: 19px; }
+    .spanish { color: #555; font-size: 15px; }
+
+    .practice-layout {
+      display: grid;
+      grid-template-columns: 1fr 270px;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .game-box {
+      background: #eaf7ff;
+      border: 2px solid #8bd3ff;
+      border-radius: 18px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .stats-box {
+      background: #fff8e6;
+      border: 2px solid #ffd27a;
+      border-radius: 18px;
+      padding: 14px;
+      text-align: left;
+      font-size: 16px;
+    }
+
+    .stats-box h3 { margin-top: 0; text-align: center; color: #1f4e79; }
+    .stats-line { margin: 10px 0; font-weight: bold; }
+
+    input, select {
+      width: 100%;
+      max-width: 380px;
+      padding: 14px;
+      font-size: 22px;
+      border-radius: 14px;
+      border: 2px solid #aaa;
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    select { font-size: 17px; padding: 10px; }
+
+    .feedback {
+      min-height: 32px;
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .ok { color: #228b22; }
+    .bad { color: #c0392b; }
+
+    .final-message {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 18px;
+      background: #e9f9e9;
+      border: 3px solid #70c970;
+      font-size: 28px;
+      font-weight: bold;
+      color: #228b22;
+      text-align: center;
+    }
+
+    .motivation-box {
+      margin-top: 12px;
+      padding: 10px;
+      background: #f0f9ff;
+      border-radius: 14px;
+      border: 2px dashed #7ec8ff;
+      text-align: center;
+      font-size: 15px;
+    }
+
+    .sticker { font-size: 42px; display: block; margin-bottom: 6px; }
+
+    .happy-sticker {
+      font-size: 70px;
+      margin-top: 10px;
+      animation: bounce 0.6s ease;
+    }
+
+    @keyframes bounce {
+      0% { transform: scale(0.8); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .mastered-list {
+      margin-top: 10px;
+      font-size: 14px;
+      max-height: 130px;
+      overflow-y: auto;
+      border-top: 1px solid #ddd;
+      padding-top: 8px;
+    }
+
+    .mastered-item { color: #228b22; font-weight: bold; }
+
+    .match-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .dropzone {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      background: #f7fbff;
+    }
+
+    .person-card {
+      font-size: 86px;
+      margin: 8px 0;
+    }
+
+    .sentence-help {
+      color: #555;
+      font-size: 16px;
+      margin-top: 4px;
+    }
+
+    .sentence-question {
+      font-size: 26px;
+      font-weight: bold;
+      color: #1f4e79;
+      margin: 12px 0;
+    }
+
+    .sentence-answers {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .sentence-option {
+      background: #fff8e6;
+      border: 2px solid #ffd27a;
+      border-radius: 16px;
+      padding: 18px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .answer-label { font-weight: bold; margin-top: 6px; }
+
+    @media (max-width: 760px) {
+      .practice-layout, .match-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 24px; }
+    }
+
+
+/* =====================================================
+   SONIDO + AJUSTES CELULAR
+   ===================================================== */
+.sound-status {
+  display: inline-block;
+  margin-left: 10px;
   font-weight: bold;
-  background: #4caf50;
+  color: #1f4e79;
 }
-
-.tab { background: #1f78d1; }
-.tab.active { background: #174e85; }
-.secondary { background: #1f78d1; }
-.danger { background: #e74c3c; }
-.sound { background: #9b59b6; }
-
-.score {
-  background: #e9f9e9;
-  border: 2px solid #70c970;
-  border-radius: 16px;
-  padding: 12px;
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 18px;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
-}
-
-.card, .option, .dropzone, .sentence-option {
-  background: #fff8e6;
-  border: 2px solid #ffd27a;
-  border-radius: 16px;
-  padding: 12px;
-  text-align: center;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.emoji { font-size: 44px; }
-.big-emoji { font-size: 82px; }
-
-.practice-layout {
-  display: grid;
-  grid-template-columns: 1fr 270px;
-  gap: 16px;
-}
-
-.game-box {
-  background: #eaf7ff;
-  border: 2px solid #8bd3ff;
-  border-radius: 18px;
-  padding: 18px;
-  text-align: center;
-}
-
-.stats-box {
-  background: #fff8e6;
-  border: 2px solid #ffd27a;
-  border-radius: 18px;
-  padding: 14px;
-  font-size: 16px;
-}
-
-.person-card { font-size: 86px; }
-
-.sentence-question {
-  font-size: 26px;
-  font-weight: bold;
-  margin: 12px 0;
-}
-
-.sentence-answers {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  gap: 12px;
-}
-
-/* ================= MÓVIL ================= */
 
 @media (max-width: 600px) {
-
   body { font-size: 14px; }
 
+  header { padding: 12px 8px; }
   h1 { font-size: 20px; }
   h2 { font-size: 18px; }
+  header p { font-size: 14px; }
 
-  .score {
-    font-size: 16px;
+  main {
+    margin: 10px auto;
     padding: 8px;
+  }
+
+  section {
+    padding: 12px;
+    border-radius: 14px;
+    margin-bottom: 14px;
+  }
+
+  .topbar {
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .tab {
+    width: auto;
+    min-width: 120px;
+    padding: 9px 10px;
+    font-size: 13px;
   }
 
   button {
     width: 100%;
     padding: 10px;
     font-size: 14px;
+    margin: 4px 0;
+    border-radius: 10px;
   }
 
-  .topbar {
-    gap: 6px;
-  }
-
-  .practice-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .game-box {
-    padding: 12px;
-  }
-
-  .stats-box {
+  .sound-status {
+    display: block;
+    margin: 6px 0 0;
     font-size: 13px;
-    padding: 10px;
   }
 
-  .big-emoji {
-    font-size: 50px;
-  }
-
-  .emoji {
-    font-size: 30px;
-  }
-
-  .person-card {
-    font-size: 50px;
-  }
-
-  input {
+  .score {
     font-size: 16px;
-    padding: 10px;
+    padding: 8px;
+    margin-bottom: 12px;
   }
 
-  .sentence-question {
-    font-size: 18px;
-  }
-
-  .sentence-option {
-    font-size: 14px;
-    padding: 10px;
-  }
-
-  .cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .sentence-answers {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
+  .practice-layout,
   .match-grid {
     grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .game-box,
+  .stats-box {
+    padding: 10px;
+    border-radius: 14px;
+  }
+
+  .stats-box { font-size: 13px; }
+  .stats-line { margin: 6px 0; }
+
+  .cards,
+  .sentence-answers {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .card,
+  .option,
+  .dropzone,
+  .sentence-option {
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 12px;
+  }
+
+  .emoji { font-size: 30px; }
+  .big-emoji { font-size: 48px; margin: 6px; }
+  .person-card { font-size: 50px; margin: 4px 0; }
+  .sticker { font-size: 32px; }
+  .happy-sticker { font-size: 48px; }
+
+  .english { font-size: 15px; }
+  .spanish { font-size: 12px; }
+
+  input,
+  select {
+    font-size: 16px;
+    padding: 10px;
+    max-width: 100%;
+  }
+
+  .feedback {
+    font-size: 16px;
+    margin-top: 8px;
+  }
+
+  .sentence-question { font-size: 18px; }
+  .sentence-help { font-size: 13px; }
+
+  .final-message {
+    font-size: 18px;
+    padding: 12px;
   }
 }
-</style>
+    /* =====================================================
+       FIN ESTILOS GENERALES DE LA PÁGINA
+       ===================================================== */
+  </style>
 </head>
 <body>
   <!-- =====================================================
@@ -235,7 +426,11 @@ button {
        INICIO CONTENIDO PRINCIPAL
        ===================================================== -->
   <main>
-    <button class="sound" onclick="activarSonido()">Activar sonido 🔊</button>
+    <!-- =====================================================
+     BOTÓN DE SONIDO PARA CELULAR
+     ===================================================== -->
+<button class="sound" onclick="activarSonido()">Activar sonido 🔊</button>
+<span class="sound-status" id="soundStatus">Sonido desactivado</span>
     <div class="score">⭐ Puntaje: <span id="score">0</span></div>
 
     <!-- =====================================================
@@ -470,36 +665,39 @@ button {
       document.getElementById('score').innerText = score;
     }
 
-    /* ================= SONIDO PARA MÓVIL ================= */
-
-function activarSonido() {
-  sonidoActivado = true;
-
-  const msg = new SpeechSynthesisUtterance('sound ready');
-  msg.lang = 'en-US';
-  msg.volume = 1;
-
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(msg);
-}
-
+    /* =====================================================
+   SONIDO PARA CELULAR
+   ===================================================== */
 let sonidoActivado = false;
 let vozIngles = null;
 
 function cargarVoces() {
+  if (!('speechSynthesis' in window)) return;
+
   const voces = window.speechSynthesis.getVoices();
+
   vozIngles =
     voces.find(v => v.lang === 'en-US') ||
-    voces.find(v => v.lang.startsWith('en')) ||
+    voces.find(v => v.lang && v.lang.startsWith('en')) ||
     null;
 }
 
-window.speechSynthesis.onvoiceschanged = cargarVoces;
-cargarVoces();
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.onvoiceschanged = cargarVoces;
+  cargarVoces();
+}
 
 function activarSonido() {
+  if (!('speechSynthesis' in window)) {
+    alert('Este navegador no soporta voz. Prueba con Chrome o Safari.');
+    return;
+  }
+
   sonidoActivado = true;
   cargarVoces();
+
+  const status = document.getElementById('soundStatus');
+  if (status) status.innerText = 'Sonido activado ✅';
 
   const msg = new SpeechSynthesisUtterance('Sound activated');
   msg.lang = 'en-US';
@@ -512,32 +710,31 @@ function activarSonido() {
   window.speechSynthesis.cancel();
   window.speechSynthesis.resume();
   window.speechSynthesis.speak(msg);
-
-  alert('Sonido activado. Ahora prueba un ejercicio.');
 }
 
-function speak(text) {
-  if (!text || !sonidoActivado) return;
+    function speak(text) {
+    if (!text || !sonidoActivado || !('speechSynthesis' in window)) return;
 
-  cargarVoces();
+    cargarVoces();
 
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.resume();
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = 'en-US';
+    msg.rate = 0.85;
+    msg.pitch = 1;
+    msg.volume = 1;
 
-  const msg = new SpeechSynthesisUtterance(text);
-  msg.lang = 'en-US';
-  msg.rate = 0.85;
-  msg.pitch = 1;
-  msg.volume = 1;
+    if (vozIngles) msg.voice = vozIngles;
 
-  if (vozIngles) msg.voice = vozIngles;
-
-  setTimeout(() => {
+    window.speechSynthesis.cancel();
     window.speechSynthesis.resume();
-    window.speechSynthesis.speak(msg);
-  }, 150);
 
-  function makeHint(word) {
+    setTimeout(function() {
+        window.speechSynthesis.resume();
+        window.speechSynthesis.speak(msg);
+    }, 120);
+    }
+
+    function makeHint(word) {
       if (word.length <= 2) return word;
       return word[0] + ' ' + '_ '.repeat(word.length - 2) + word[word.length - 1];
     }
@@ -905,188 +1102,181 @@ function speak(text) {
        FIN LÓGICA MÓDULO 4: UNIR IMAGEN CON PALABRA
        ===================================================== */
 
-    /* =====================================================
-       INICIO LÓGICA MÓDULO 5: PREGUNTAS
-       ===================================================== */
-    function makeSentenceQuestion() {
-      const item = words[Math.floor(Math.random() * words.length)];
+ /* =====================================================
+   INICIO LÓGICA MÓDULO 5: PREGUNTAS
+   ===================================================== */
 
-      const people = [
-        { subject: 'he', faceHappy: '👦😄', faceSad: '👦😢' },
-        { subject: 'she', faceHappy: '👧😊', faceSad: '👧😞' }
-      ];
+function makeSentenceQuestion() {
+  const item = words[Math.floor(Math.random() * words.length)];
 
-      const person = people[Math.floor(Math.random() * people.length)];
-      const likes = Math.random() > 0.5;
+  const people = [
+    { subject: 'he', aux: 'Does', faceHappy: '👦😄', faceSad: '👦😢' },
+    { subject: 'she', aux: 'Does', faceHappy: '👧😊', faceSad: '👧😞' },
+    { subject: 'you', aux: 'Do', faceHappy: '🧒😄', faceSad: '🧒😢' }
+  ];
 
-      return {
-        id: Date.now() + '-' + Math.random(),
-        word: item,
-        subject: person.subject,
-        face: likes ? person.faceHappy : person.faceSad,
-        likes: likes,
-        question: `Does ${person.subject} like ${item.en}?`,
-        correctAnswer: likes
-          ? `${person.subject} likes ${item.en}`
-          : `${person.subject} doesn't like ${item.en}`
-      };
-    }
+  const person = people[Math.floor(Math.random() * people.length)];
+  const likes = Math.random() > 0.5;
+  const food = item.en;
 
-    function loadSentenceQuestion(questionObj) {
-      if (sentenceFinished) return;
-      if (sentenceTotal >= sentenceLimit) {
-        disableSentenceExercise();
-        return;
-      }
+  let correctAnswer = '';
 
-      currentSentence = questionObj || makeSentenceQuestion();
-      sentenceAnswered = false;
+  if (person.subject === 'you') {
+    correctAnswer = likes
+      ? `you like ${food}`
+      : `you don't like ${food}`;
+  } else {
+    correctAnswer = likes
+      ? `${person.subject} likes ${food}`
+      : `${person.subject} doesn't like ${food}`;
+  }
 
-      document.getElementById('sentencePerson').innerText = currentSentence.face;
-      document.getElementById('sentenceFood').innerText = currentSentence.word.icon;
-      document.getElementById('sentenceHelp').innerText = currentSentence.likes
-        ? 'Cara feliz = likes'
-        : "Cara triste = doesn't like";
+  return {
+    word: item,
+    subject: person.subject,
+    aux: person.aux,
+    face: likes ? person.faceHappy : person.faceSad,
+    likes,
+    question: `${person.aux} ${person.subject} like ${food}?`,
+    correctAnswer
+  };
+}
 
-      document.getElementById('sentenceQuestion').innerText = currentSentence.question;
-      document.getElementById('sentenceFeedback').innerText = '';
-      document.getElementById('sentenceHappySticker').classList.add('hidden');
+function updateSentenceStats() {
+  document.getElementById('sentenceCorrect').innerText = sentenceCorrect;
+  document.getElementById('sentenceWrong').innerText = sentenceWrong;
+  document.getElementById('sentenceShown').innerText = sentenceShown;
+  document.getElementById('sentenceTotal').innerText = sentenceTotal;
+  document.getElementById('sentenceLimitText').innerText = sentenceLimit;
+}
 
-      const food = currentSentence.word.en;
-      const options = [
-        currentSentence.correctAnswer,
-        `he likes ${food}`,
-        `she likes ${food}`,
-        `he doesn't like ${food}`,
-        `she doesn't like ${food}`
-      ];
+function loadSentenceQuestion() {
+  currentSentence = makeSentenceQuestion();
+  sentenceAnswered = false;
 
-      const cleanOptions = shuffle([...new Set(options)]).slice(0, 4);
+  document.getElementById('sentencePerson').innerText = currentSentence.face;
+  document.getElementById('sentenceFood').innerText = currentSentence.word.icon;
+  document.getElementById('sentenceQuestion').innerText = currentSentence.question;
 
-      const container = document.getElementById('sentenceOptions');
-      container.innerHTML = '';
+  document.getElementById('sentenceHelp').innerText =
+    currentSentence.likes
+      ? 'Cara feliz = like / likes'
+      : "Cara triste = don't / doesn't like";
 
-      cleanOptions.forEach(answer => {
-        const opt = document.createElement('div');
-        opt.className = 'sentence-option';
-        opt.innerText = answer;
-        opt.onclick = function() { checkSentenceAnswer(answer); };
-        container.appendChild(opt);
-      });
-    }
+  document.getElementById('sentenceFeedback').innerText = '';
 
-    function updateSentenceStats() {
-      document.getElementById('sentenceCorrect').innerText = sentenceCorrect;
-      document.getElementById('sentenceWrong').innerText = sentenceWrong;
-      document.getElementById('sentenceShown').innerText = sentenceShown;
-      document.getElementById('sentenceTotal').innerText = sentenceTotal;
-      document.getElementById('sentenceLimitText').innerText = sentenceLimit;
-    }
+  const food = currentSentence.word.en;
 
-    function checkSentenceAnswer(answer) {
-      if (sentenceAnswered || sentenceFinished) return;
+  const distractors = [
+    `he likes ${food}`,
+    `she likes ${food}`,
+    `you like ${food}`,
+    `he doesn't like ${food}`,
+    `she doesn't like ${food}`,
+    `you don't like ${food}`
+  ].filter(x => x !== currentSentence.correctAnswer);
 
-      sentenceAnswered = true;
-      sentenceTotal++;
+  const options = shuffle([
+    currentSentence.correctAnswer,
+    ...shuffle(distractors).slice(0, 3)
+  ]);
 
-      const feedback = document.getElementById('sentenceFeedback');
+  const container = document.getElementById('sentenceOptions');
+  container.innerHTML = '';
 
-      if (normalize(answer) === normalize(currentSentence.correctAnswer)) {
-        sentenceCorrect++;
-        addScore(1);
-        feedback.innerText = '✅ Correcto: ' + currentSentence.correctAnswer;
-        feedback.className = 'feedback ok';
-        speak(currentSentence.correctAnswer);
-        updateMotivation('sentence');
-        document.getElementById('sentenceHappySticker').classList.remove('hidden');
-        updateSentenceStats();
+  options.forEach(answer => {
+    const opt = document.createElement('div');
+    opt.className = 'sentence-option';
+    opt.innerText = answer;
+    opt.onclick = () => checkSentenceAnswer(answer);
+    container.appendChild(opt);
+  });
+}
 
-        if (!sentenceFinished) {
-          setTimeout(nextSentenceExercise, 1400);
-        }
-      } else {
-        sentenceWrong++;
-        addQueue(sentenceRepeatQueue, currentSentence);
-        feedback.innerText = '❌ Correcto: ' + currentSentence.correctAnswer;
-        feedback.className = 'feedback bad';
-        updateSentenceStats();
-      }
-    }
+function checkSentenceAnswer(answer) {
+  if (sentenceAnswered || sentenceFinished) return;
 
-    function giveSentenceHint() {
-      if (sentenceFinished || !currentSentence) return;
+  sentenceAnswered = true;
+  sentenceTotal++;
 
-      document.getElementById('sentenceFeedback').innerText = currentSentence.likes
-        ? '💡 Cara feliz: he/she likes + comida'
-        : "💡 Cara triste: he/she doesn't like + comida";
+  const feedback = document.getElementById('sentenceFeedback');
 
-      document.getElementById('sentenceFeedback').className = 'feedback';
-    }
+  if (normalize(answer) === normalize(currentSentence.correctAnswer)) {
+    sentenceCorrect++;
+    addScore(1);
 
-    function showSentenceAnswer() {
-      if (sentenceAnswered || sentenceFinished) return;
+    feedback.innerText = '✅ Correcto: ' + currentSentence.correctAnswer;
+    feedback.className = 'feedback ok';
 
-      sentenceAnswered = true;
-      sentenceShown++;
-      sentenceTotal++;
+    speak(currentSentence.correctAnswer);
+    updateMotivation('sentence');
+
+    const sticker = document.getElementById('sentenceHappySticker');
+    if (sticker) sticker.classList.remove('hidden');
+
+    updateSentenceStats();
+
+    setTimeout(function () {
+      nextSentenceExercise();
+    }, 1400);
+
+  } else {
+    sentenceWrong++;
+
+    if (typeof addQueue === 'function') {
       addQueue(sentenceRepeatQueue, currentSentence);
-
-      document.getElementById('sentenceFeedback').innerText = '👀 Respuesta: ' + currentSentence.correctAnswer;
-      document.getElementById('sentenceFeedback').className = 'feedback bad';
-      speak(currentSentence.correctAnswer);
-      updateSentenceStats();
-
-      setTimeout(nextSentenceExercise, 1400);
     }
 
-    function nextSentenceExercise() {
-      if (sentenceFinished) return;
-      if (sentenceTotal >= sentenceLimit) {
-        disableSentenceExercise();
-        return;
-      }
-      loadSentenceQuestion();
-    }
+    feedback.innerText = '❌ Correcto: ' + currentSentence.correctAnswer;
+    feedback.className = 'feedback bad';
 
-    function resetSentenceSession() {
-      sentenceLimit = parseInt(document.getElementById('sentenceLimit').value, 10);
-      sentenceCorrect = 0;
-      sentenceWrong = 0;
-      sentenceShown = 0;
-      sentenceTotal = 0;
-      sentenceRepeatQueue = [];
-      sentenceFinished = false;
+    updateSentenceStats();
+  }
+}
 
-      document.getElementById('sentenceFinalMessage').classList.add('hidden');
-      document.querySelectorAll('#sentence .game-box button').forEach(btn => btn.disabled = false);
+function giveSentenceHint() {
+  if (!currentSentence) return;
 
-      updateSentenceStats();
-      loadSentenceQuestion();
-    }
+  document.getElementById('sentenceFeedback').innerText =
+    currentSentence.subject === 'you'
+      ? "💡 Do you → you like / you don't like"
+      : "💡 Does he/she → likes / doesn't like";
 
-    function repeatSentencePending() {
-      if (sentenceFinished) return;
+  document.getElementById('sentenceFeedback').className = 'feedback';
+}
 
-      if (sentenceRepeatQueue.length === 0) {
-        document.getElementById('sentenceFeedback').innerText = '✅ No hay pendientes.';
-        return;
-      }
+function showSentenceAnswer() {
+  if (sentenceAnswered || sentenceFinished) return;
 
-      loadSentenceQuestion(sentenceRepeatQueue.shift());
-      document.getElementById('sentenceFeedback').innerText = '🔁 Repitiendo pendiente';
-    }
+  sentenceAnswered = true;
+  sentenceShown++;
+  sentenceTotal++;
 
-    function disableSentenceExercise() {
-      sentenceFinished = true;
-      document.getElementById('sentenceFinalMessage').classList.remove('hidden');
-      document.getElementById('sentenceFeedback').innerText = '';
-      document.getElementById('sentenceOptions').innerHTML = '';
-      document.querySelectorAll('#sentence .game-box button').forEach(btn => btn.disabled = true);
-    }
+  if (typeof addQueue === 'function') {
+    addQueue(sentenceRepeatQueue, currentSentence);
+  }
 
-    /* =====================================================
-       FIN LÓGICA MÓDULO 5: PREGUNTAS 
-       ===================================================== */
+  document.getElementById('sentenceFeedback').innerText =
+    '👀 Respuesta: ' + currentSentence.correctAnswer;
+
+  document.getElementById('sentenceFeedback').className = 'feedback bad';
+
+  speak(currentSentence.correctAnswer);
+  updateSentenceStats();
+
+  setTimeout(function () {
+    nextSentenceExercise();
+  }, 1400);
+}
+
+function nextSentenceExercise() {
+  loadSentenceQuestion();
+}
+
+/* =====================================================
+   FIN LÓGICA MÓDULO 5: PREGUNTAS
+   ===================================================== */
+   
 
     /* =====================================================
        INICIO INICIALIZACIÓN DE LA APP
